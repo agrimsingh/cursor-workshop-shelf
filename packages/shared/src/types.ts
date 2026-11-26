@@ -22,3 +22,4 @@ export type Book = {
 };
 
 export const LOAN_DAYS = 14;
+export const MAX_RENEWALS = 1;

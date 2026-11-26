@@ -1,0 +1,15 @@
+---
+description: Conventions for GraphQL schema and resolvers in the API
+globs: apps/api/**
+alwaysApply: false
+---
+
+# API conventions
+
+- One domain per file: `src/schema/<domain>.ts` holds the SDL, `src/resolvers/<domain>.ts` the resolvers. Register new files in both `index.ts` files.
+- Every mutation starts with `const userId = requireUser(ctx);`.
+- Check in this order, so error codes are predictable: `NOT_FOUND`, then `FORBIDDEN` (not yours), then `CONFLICT` (state does not allow it).
+- Throw `AppError` from `@shelf/shared`. Write messages a person can act on, for example "Overdue loans can't be renewed. Return the book."
+- No SQL here. Call a function from `@shelf/db`, and add one there if it is missing.
+- Use `ctx.now()` for the current time, never `new Date()`, so tests can pin the clock.
+- Add a test with `testApi()` for every new error code.
