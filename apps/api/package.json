@@ -1,0 +1,17 @@
+{
+  "name": "@shelf/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts"
+  },
+  "dependencies": {
+    "@shelf/db": "*",
+    "@shelf/shared": "*"
+  },
+  "devDependencies": {
+    "graphql": "^16.15.0",
+    "graphql-yoga": "^5.24.6",
+    "tsx": "^4.23.15"
+  }
+}

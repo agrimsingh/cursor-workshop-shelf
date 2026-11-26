@@ -1,0 +1,27 @@
+{
+  "name": "shelf",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n api,web -c blue,magenta \"npm run dev -w @shelf/api\" \"npm run dev -w @shelf/web\"",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json",
+    "check": "npm run typecheck && npm test",
+    "check:starter": "vitest run --config checks/vitest.config.ts checks/starter.test.ts",
+    "doctor": "node scripts/doctor.mjs",
+    "db:reset": "node -e \"require('fs').rmSync('data',{recursive:true,force:true})\" && echo 'Database reset. It is re-created on the next npm run dev.'"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.11",
+    "concurrently": "^10.0.7",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.2"
+  }
+}

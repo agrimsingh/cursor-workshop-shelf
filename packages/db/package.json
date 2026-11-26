@@ -1,0 +1,11 @@
+{
+  "name": "@shelf/db",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@shelf/shared": "*"
+  }
+}
