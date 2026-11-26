@@ -1,47 +1,43 @@
-# Starter: plan, build, review, rewind
+# Ship safely: Bugbot and merge gates
 
-**Branch:** `main` · **Time:** 20–30 minutes · **Answer key:** `starter-done`
+**Branches:** `ship-safely` (base), `ship-safely-pr` (the pull request) · **Time:** 10–15 minutes · **Answer key:** `ship-safely-done`
 
-You'll add one feature that touches every layer of the app: the database, the GraphQL API, and the React UI.
+The open pull request **"Add book reviews"** merges `ship-safely-pr` into `ship-safely`. Its tests pass. It still has bugs that break the rules in `.cursor/BUGBOT.md`.
 
-## The task
+## Watch (facilitator demo)
 
-Books wear out. Add a **condition** to every book (new, good, or worn), show it on each book card, and let people filter the list by condition.
+1. Open the pull request on GitHub and read `.cursor/BUGBOT.md`. These are the team's own review rules, kept in the repo.
+2. Read Bugbot's comments on the pull request. For each one, ask: would our current review have caught it?
+3. Use **Fix in Cursor** on one comment and watch the agent fix it.
+4. Talk through where Bugbot sits among your gates: required checks, Bugbot as a required check, then a human approval.
 
-## Steps
+## Try it yourself (local)
 
-1. **Plan first.** Open a new agent and switch to **Plan mode** (Shift+Tab). Paste:
+You can't push to this repo, but you can review the same change in your editor.
 
-   > Add a condition to every book: new, good, or worn. Seed a mix of conditions. Show the condition on each book card, and add a filter next to the search box. Look at how search works today and follow the same path through the db package, the GraphQL API, and the web app.
+```bash
+git checkout ship-safely-pr
+npm install && npm run db:reset
+npm run check               # passes: the tests don't cover the bugs
+npm run check:ship-safely   # fails: the acceptance check does
+```
 
-2. **Edit the plan.** Read it before you build. Change at least one step. For example, ask for the filter to be a dropdown, or for worn books to get a warning colour.
+1. In a new agent, paste:
 
-3. **Build.** Click **Build** (or switch to Agent mode). Watch which files it reads and edits.
+   > Review @Branch against `.cursor/BUGBOT.md`. List each bug with the file, the line, and why it matters. Don't fix anything yet.
 
-4. **Review the diff.** Open the changes. Reject one hunk you don't like and ask the agent to redo it your way.
-
-5. **Rewind once.** Send a follow-up you don't want (for example, "also rename Book to Volume everywhere"). Then restore the checkpoint from before that message.
-
-6. **Check your work.**
-
-   ```bash
-   npm run check:starter   # the acceptance check for this task
-   npm run check           # type check and the existing tests
-   ```
-
-   Tip: tell the agent "make `npm run check:starter` pass". It can run the check and fix what fails.
-
-7. **See it.** `npm run dev`, then open http://localhost:5173.
+2. Compare its list with Bugbot's comments on the pull request.
+3. Ask it to fix the bugs and add a test for each, then run `npm run check:ship-safely`.
 
 ## Stretch
 
-- Only the borrower should see a "Report damage" button that moves a book from good to worn.
-- Ask the agent to write the tests for your stretch change first, then make them pass.
+- Add a rule to `.cursor/BUGBOT.md` that your team would want, then ask the agent to review again.
+- Write a `BUGBOT.md` inside `apps/web` with front-end-only rules.
 
 ## Stuck?
 
 ```bash
-git stash            # park your work
-git checkout starter-done
-npm run db:reset     # re-seed so every book gets a condition
+git stash
+git checkout ship-safely-done
+git diff ship-safely-pr ship-safely-done   # the fixes
 ```
