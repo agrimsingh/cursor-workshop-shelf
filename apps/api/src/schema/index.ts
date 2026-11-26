@@ -1,5 +1,6 @@
 import { booksTypeDefs } from "./books";
 import { loansTypeDefs } from "./loans";
+import { reviewsTypeDefs } from "./reviews";
 import { usersTypeDefs } from "./users";
 
-export const typeDefs = [booksTypeDefs, loansTypeDefs, usersTypeDefs];
+export const typeDefs = [booksTypeDefs, loansTypeDefs, usersTypeDefs, reviewsTypeDefs];

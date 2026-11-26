@@ -26,6 +26,15 @@ CREATE TABLE IF NOT EXISTS loans (
 
 CREATE UNIQUE INDEX IF NOT EXISTS one_active_loan_per_book
   ON loans(book_id) WHERE returned_at IS NULL;
+
+CREATE TABLE IF NOT EXISTS reviews (
+  id         INTEGER PRIMARY KEY,
+  book_id    INTEGER NOT NULL REFERENCES books(id),
+  user_id    TEXT    NOT NULL REFERENCES users(id),
+  rating     INTEGER NOT NULL,
+  body       TEXT    NOT NULL,
+  created_at TEXT    NOT NULL
+);
 `;
 
 export function migrate(db: DatabaseSync): void {
