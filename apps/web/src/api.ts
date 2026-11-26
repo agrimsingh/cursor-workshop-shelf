@@ -33,6 +33,7 @@ export const BOOK_FIELDS = /* GraphQL */ `
       id
       dueAt
       overdue
+      lateFeeCents
       borrowedAt
       returnedAt
       borrower {

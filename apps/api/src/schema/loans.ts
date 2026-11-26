@@ -7,6 +7,8 @@ export const loansTypeDefs = /* GraphQL */ `
     dueAt: String!
     returnedAt: String
     overdue: Boolean!
+    "Late fee in cents, as of now for active loans or as of the return for returned ones."
+    lateFeeCents: Int!
   }
 
   type Mutation {

@@ -1,4 +1,4 @@
-import { formatDate } from "@shelf/shared";
+import { formatDate, formatMoney } from "@shelf/shared";
 import type { BookView } from "../types";
 
 type Props = {
@@ -26,6 +26,7 @@ export function BookCard({ book, meId, onBorrow, onReturn }: Props) {
         {loan ? (
           <p className={loan.overdue ? "status overdue" : "status on-loan"}>
             {loan.overdue ? "Overdue" : "On loan"} · {isMine ? "you" : loan.borrower.name} · due {formatDate(loan.dueAt)}
+            {loan.lateFeeCents > 0 && ` · ${formatMoney(loan.lateFeeCents)} late fee`}
           </p>
         ) : (
           <p className="status available">Available</p>

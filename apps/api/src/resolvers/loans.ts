@@ -1,5 +1,5 @@
 import { activeLoanForBook, getBook, getUser, insertLoan, markReturned, type LoanRow } from "@shelf/db";
-import { AppError, LOAN_DAYS, addDays } from "@shelf/shared";
+import { AppError, LOAN_DAYS, addDays, lateFeeCents } from "@shelf/shared";
 import { requireUser, type Context } from "../context";
 
 export const loansResolvers = {
@@ -27,5 +27,6 @@ export const loansResolvers = {
     book: (loan: LoanRow, _: unknown, ctx: Context) => getBook(ctx.db, loan.bookId),
     borrower: (loan: LoanRow, _: unknown, ctx: Context) => getUser(ctx.db, loan.userId),
     overdue: (loan: LoanRow, _: unknown, ctx: Context) => !loan.returnedAt && loan.dueAt < ctx.now(),
+    lateFeeCents: (loan: LoanRow, _: unknown, ctx: Context) => lateFeeCents(loan.dueAt, loan.returnedAt ?? ctx.now()),
   },
 };

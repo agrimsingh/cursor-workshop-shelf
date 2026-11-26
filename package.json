@@ -15,6 +15,9 @@
     "typecheck": "tsc -p tsconfig.json",
     "check": "npm run typecheck && npm test",
     "check:starter": "vitest run --config checks/vitest.config.ts checks/starter.test.ts",
+    "check:team-practice": "vitest run --config checks/vitest.config.ts checks/team-practice.test.ts",
+    "check:context": "vitest run --config checks/vitest.config.ts checks/context.test.ts",
+    "check:conventions": "node scripts/check-conventions.mjs",
     "doctor": "node scripts/doctor.mjs",
     "db:reset": "node -e \"require('fs').rmSync('data',{recursive:true,force:true})\" && echo 'Database reset. It is re-created on the next npm run dev.'"
   },
