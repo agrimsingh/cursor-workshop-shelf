@@ -29,8 +29,8 @@ export function reviewsForBook(db: DatabaseSync, bookId: number): ReviewRow[] {
 
 export function searchReviews(db: DatabaseSync, text: string): ReviewRow[] {
   return db
-    .prepare(`SELECT ${COLUMNS} FROM reviews WHERE body LIKE '%${text}%' ORDER BY created_at DESC`)
-    .all() as ReviewRow[];
+    .prepare(`SELECT ${COLUMNS} FROM reviews WHERE body LIKE ? ORDER BY created_at DESC`)
+    .all(`%${text}%`) as ReviewRow[];
 }
 
 export function ratingTotals(db: DatabaseSync, bookId: number): { total: number; count: number } {

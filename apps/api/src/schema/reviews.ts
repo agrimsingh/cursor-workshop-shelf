@@ -9,7 +9,8 @@ export const reviewsTypeDefs = /* GraphQL */ `
 
   type Book {
     reviews: [Review!]!
-    averageRating: Float!
+    "Null when the book has no reviews."
+    averageRating: Float
   }
 
   type Query {
@@ -17,7 +18,7 @@ export const reviewsTypeDefs = /* GraphQL */ `
   }
 
   type Mutation {
-    "authorId lets the import script add reviews on behalf of people."
-    addReview(bookId: ID!, rating: Int!, body: String!, authorId: ID!): Review!
+    "Reviews as the signed-in user. Rating must be 1 to 5."
+    addReview(bookId: ID!, rating: Int!, body: String!): Review!
   }
 `;
