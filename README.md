@@ -34,6 +34,7 @@ Start an exercise:
 ```bash
 git checkout <branch>
 npm install
+npm run db:reset   # each branch seeds its own data
 ```
 
 Then open `STEPS.md` on that branch. Each one has the goal, a prompt to start with, a check command that tells you when you're done, and a stretch goal.
@@ -43,6 +44,7 @@ Catch up or compare:
 ```bash
 git stash
 git checkout <branch>-done
+npm run db:reset
 git diff <branch> <branch>-done   # see what "done" looks like
 ```
 

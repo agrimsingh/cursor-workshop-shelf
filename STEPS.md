@@ -43,4 +43,5 @@ Books wear out. Add a **condition** to every book (new, good, or worn), show it 
 ```bash
 git stash            # park your work
 git checkout starter-done
+npm run db:reset     # re-seed so every book gets a condition
 ```
