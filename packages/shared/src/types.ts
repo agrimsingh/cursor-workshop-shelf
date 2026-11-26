@@ -11,12 +11,21 @@ export type Loan = {
   returnedAt: string | null;
 };
 
+export type BookCondition = "NEW" | "GOOD" | "WORN";
+
+export const CONDITION_LABELS: Record<BookCondition, string> = {
+  NEW: "New",
+  GOOD: "Good",
+  WORN: "Worn",
+};
+
 export type Book = {
   id: string;
   title: string;
   author: string;
   year: number;
   coverColor: string;
+  condition: BookCondition;
   available: boolean;
   currentLoan: Loan | null;
 };

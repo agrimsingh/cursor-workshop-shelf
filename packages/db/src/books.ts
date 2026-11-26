@@ -1,4 +1,5 @@
-import type { DatabaseSync } from "node:sqlite";
+import type { BookCondition } from "@shelf/shared";
+import type { DatabaseSync, SQLInputValue } from "node:sqlite";
 
 export type BookRow = {
   id: number;
@@ -6,22 +7,32 @@ export type BookRow = {
   author: string;
   year: number;
   coverColor: string;
+  condition: BookCondition;
 };
 
-const COLUMNS = "id, title, author, year, cover_color AS coverColor";
+const COLUMNS = "id, title, author, year, cover_color AS coverColor, condition";
 
 export type BookFilter = {
   search?: string;
+  condition?: BookCondition;
 };
 
 export function listBooks(db: DatabaseSync, filter: BookFilter = {}): BookRow[] {
+  const where: string[] = [];
+  const params: SQLInputValue[] = [];
+
   if (filter.search) {
     const pattern = `%${filter.search}%`;
-    return db
-      .prepare(`SELECT ${COLUMNS} FROM books WHERE title LIKE ? OR author LIKE ? ORDER BY title`)
-      .all(pattern, pattern) as BookRow[];
+    where.push("(title LIKE ? OR author LIKE ?)");
+    params.push(pattern, pattern);
   }
-  return db.prepare(`SELECT ${COLUMNS} FROM books ORDER BY title`).all() as BookRow[];
+  if (filter.condition) {
+    where.push("condition = ?");
+    params.push(filter.condition);
+  }
+
+  const clause = where.length ? `WHERE ${where.join(" AND ")}` : "";
+  return db.prepare(`SELECT ${COLUMNS} FROM books ${clause} ORDER BY title`).all(...params) as BookRow[];
 }
 
 export function getBook(db: DatabaseSync, id: number): BookRow | undefined {

@@ -28,6 +28,7 @@ export const BOOK_FIELDS = /* GraphQL */ `
     author
     year
     coverColor
+    condition
     available
     currentLoan {
       id

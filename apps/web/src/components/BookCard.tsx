@@ -1,4 +1,4 @@
-import { formatDate } from "@shelf/shared";
+import { CONDITION_LABELS, formatDate } from "@shelf/shared";
 import type { BookView } from "../types";
 
 type Props = {
@@ -22,6 +22,9 @@ export function BookCard({ book, meId, onBorrow, onReturn }: Props) {
         <p className="meta">
           {book.author} · {book.year}
         </p>
+        <span className={`condition condition-${book.condition.toLowerCase()}`}>
+          {CONDITION_LABELS[book.condition]}
+        </span>
 
         {loan ? (
           <p className={loan.overdue ? "status overdue" : "status on-loan"}>

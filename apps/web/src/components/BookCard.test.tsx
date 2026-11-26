@@ -9,6 +9,7 @@ const book: BookView = {
   author: "Frederick P. Brooks Jr.",
   year: 1975,
   coverColor: "#7a6a12",
+  condition: "WORN",
   available: false,
   currentLoan: {
     id: "2",

@@ -111,6 +111,29 @@ body {
   font-size: 13px;
 }
 
+.condition {
+  align-self: flex-start;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.condition-new {
+  color: #067647;
+  background: #ecfdf3;
+}
+
+.condition-good {
+  color: #175cd3;
+  background: #eff8ff;
+}
+
+.condition-worn {
+  color: #b54708;
+  background: #fffaeb;
+}
+
 .status {
   margin: 4px 0 8px;
   font-size: 13px;

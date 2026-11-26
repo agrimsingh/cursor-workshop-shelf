@@ -30,4 +30,12 @@ CREATE UNIQUE INDEX IF NOT EXISTS one_active_loan_per_book
 
 export function migrate(db: DatabaseSync): void {
   db.exec(SCHEMA);
+  addColumnIfMissing(db, "books", "condition", "TEXT NOT NULL DEFAULT 'GOOD' CHECK (condition IN ('NEW', 'GOOD', 'WORN'))");
+}
+
+function addColumnIfMissing(db: DatabaseSync, table: string, column: string, definition: string): void {
+  const columns = db.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[];
+  if (!columns.some((c) => c.name === column)) {
+    db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+  }
 }

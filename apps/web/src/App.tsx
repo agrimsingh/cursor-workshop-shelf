@@ -1,14 +1,15 @@
-import type { User } from "@shelf/shared";
+import type { BookCondition, User } from "@shelf/shared";
 import { useCallback, useEffect, useState } from "react";
 import { BOOK_FIELDS, getCurrentUserId, gql, setCurrentUserId } from "./api";
 import { BookGrid } from "./components/BookGrid";
+import { ConditionFilter } from "./components/ConditionFilter";
 import { SearchBar } from "./components/SearchBar";
 import { UserPicker } from "./components/UserPicker";
 import type { BookView } from "./types";
 
 const BOOKS_QUERY = /* GraphQL */ `
-  query Books($search: String) {
-    books(search: $search) {
+  query Books($search: String, $condition: BookCondition) {
+    books(search: $search, condition: $condition) {
       ...BookFields
     }
   }
@@ -19,18 +20,19 @@ export function App() {
   const [users, setUsers] = useState<User[]>([]);
   const [meId, setMeId] = useState<string | null>(getCurrentUserId());
   const [search, setSearch] = useState("");
+  const [condition, setCondition] = useState<BookCondition | null>(null);
   const [books, setBooks] = useState<BookView[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const loadBooks = useCallback(async () => {
     try {
-      const data = await gql<{ books: BookView[] }>(BOOKS_QUERY, { search: search || null });
+      const data = await gql<{ books: BookView[] }>(BOOKS_QUERY, { search: search || null, condition });
       setBooks(data.books);
       setError(null);
     } catch (e) {
       setError((e as Error).message);
     }
-  }, [search]);
+  }, [search, condition]);
 
   useEffect(() => {
     gql<{ users: User[] }>(`{ users { id name } }`)
@@ -66,6 +68,7 @@ export function App() {
 
       <div className="toolbar">
         <SearchBar value={search} onChange={setSearch} />
+        <ConditionFilter value={condition} onChange={setCondition} />
       </div>
 
       {error && <p className="error">{error}</p>}
