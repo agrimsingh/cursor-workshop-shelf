@@ -1,14 +1,17 @@
 import { formatDate } from "@shelf/shared";
 import type { BookView } from "../types";
+import { WaitlistButton } from "./WaitlistButton";
 
 type Props = {
   book: BookView;
   meId: string | null;
   onBorrow: (bookId: string) => void;
   onReturn: (bookId: string) => void;
+  onJoin: (bookId: string) => void;
+  onLeave: (bookId: string) => void;
 };
 
-export function BookCard({ book, meId, onBorrow, onReturn }: Props) {
+export function BookCard({ book, meId, onBorrow, onReturn, onJoin, onLeave }: Props) {
   const loan = book.currentLoan;
   const isMine = loan?.borrower.id === meId;
 
@@ -37,6 +40,7 @@ export function BookCard({ book, meId, onBorrow, onReturn }: Props) {
           </button>
         )}
         {loan && isMine && <button onClick={() => onReturn(book.id)}>Return</button>}
+        <WaitlistButton book={book} meId={meId} onJoin={onJoin} onLeave={onLeave} />
       </div>
     </article>
   );

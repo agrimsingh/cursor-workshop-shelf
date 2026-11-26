@@ -40,5 +40,14 @@ export const BOOK_FIELDS = /* GraphQL */ `
         name
       }
     }
+    waitlist {
+      position
+      joinedAt
+      user {
+        id
+        name
+      }
+    }
+    myWaitlistPosition
   }
 `;

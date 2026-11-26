@@ -1,3 +1,4 @@
+import { createNotification, getBook, removeFromWaitlist, waitlistForBook } from "@shelf/db";
 import type { Context } from "./context";
 
 // Part C owns this file. See PARALLEL.md.
@@ -7,5 +8,15 @@ import type { Context } from "./context";
  * Notifies the next person on the book's waitlist and takes them off the list.
  */
 export function notifyNextInLine(ctx: Context, bookId: number): void {
-  // Not implemented yet (Part C). Left as a no-op so returning books keeps working.
+  const next = waitlistForBook(ctx.db, bookId)[0];
+  const book = getBook(ctx.db, bookId);
+  if (!next || !book) return;
+
+  createNotification(ctx.db, {
+    userId: next.userId,
+    bookId,
+    message: `${book.title} is back. You're next in line.`,
+    createdAt: ctx.now(),
+  });
+  removeFromWaitlist(ctx.db, { bookId, userId: next.userId });
 }

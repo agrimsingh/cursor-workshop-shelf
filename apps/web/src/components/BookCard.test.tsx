@@ -23,16 +23,17 @@ const book: BookView = {
 };
 
 const noop = () => {};
+const actions = { onBorrow: noop, onReturn: noop, onJoin: noop, onLeave: noop };
 
 describe("BookCard", () => {
   it("shows who has an overdue book and when it was due", () => {
-    const html = renderToStaticMarkup(<BookCard book={book} meId="ada" onBorrow={noop} onReturn={noop} />);
+    const html = renderToStaticMarkup(<BookCard book={book} meId="ada" {...actions} />);
     expect(html).toContain("Overdue · Linus Torvalds · due 15 Nov 2026");
     expect(html).not.toContain("Return");
   });
 
   it("offers Return to the borrower", () => {
-    const html = renderToStaticMarkup(<BookCard book={book} meId="linus" onBorrow={noop} onReturn={noop} />);
+    const html = renderToStaticMarkup(<BookCard book={book} meId="linus" {...actions} />);
     expect(html).toContain("Return");
   });
 });

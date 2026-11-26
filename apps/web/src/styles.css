@@ -140,6 +140,101 @@ body {
   cursor: pointer;
 }
 
+.waitlist {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  font-size: 13px;
+  color: #6e6e73;
+}
+
+.waitlist button {
+  margin-top: 0;
+  margin-left: auto;
+}
+
+.details button.secondary {
+  background: white;
+  color: #1d1d1f;
+  border: 1px solid #d2d2d7;
+}
+
+.waitlist-place {
+  color: #175cd3;
+  font-weight: 500;
+}
+
+.bell {
+  position: relative;
+}
+
+.bell-button {
+  font-size: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.bell-count {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  background: #b42318;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 1px 6px;
+}
+
+.bell-list {
+  position: absolute;
+  right: 0;
+  top: 32px;
+  z-index: 10;
+  width: 300px;
+  list-style: none;
+  margin: 0;
+  padding: 8px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+}
+
+.bell-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.bell-list li.unread {
+  background: #eff8ff;
+}
+
+.bell-list small {
+  color: #6e6e73;
+}
+
+.bell-list button {
+  align-self: flex-start;
+  font: inherit;
+  font-size: 12px;
+  border: none;
+  background: none;
+  color: #175cd3;
+  padding: 0;
+  cursor: pointer;
+}
+
+.bell-empty {
+  color: #6e6e73;
+}
+
 .details button:disabled {
   background: #d2d2d7;
   cursor: not-allowed;

@@ -13,17 +13,33 @@ export type WaitlistRow = {
 
 /** Everyone waiting for a book, next in line first (earliest joinedAt, then lowest id). */
 export function waitlistForBook(db: DatabaseSync, bookId: number): WaitlistRow[] {
-  throw new Error("Not implemented yet (Part A): waitlistForBook");
+  return db
+    .prepare(
+      `SELECT id, book_id AS bookId, user_id AS userId, joined_at AS joinedAt,
+              ROW_NUMBER() OVER (ORDER BY joined_at, id) AS position
+         FROM waitlist
+        WHERE book_id = ?
+        ORDER BY position`,
+    )
+    .all(bookId) as WaitlistRow[];
 }
 
 export function addToWaitlist(
   db: DatabaseSync,
   entry: { bookId: number; userId: string; joinedAt: string },
 ): WaitlistRow {
-  throw new Error("Not implemented yet (Part A): addToWaitlist");
+  db.prepare("INSERT INTO waitlist (book_id, user_id, joined_at) VALUES (?, ?, ?)").run(
+    entry.bookId,
+    entry.userId,
+    entry.joinedAt,
+  );
+  return waitlistForBook(db, entry.bookId).find((row) => row.userId === entry.userId)!;
 }
 
 /** Returns true when the user was on the waitlist. */
 export function removeFromWaitlist(db: DatabaseSync, entry: { bookId: number; userId: string }): boolean {
-  throw new Error("Not implemented yet (Part A): removeFromWaitlist");
+  const { changes } = db
+    .prepare("DELETE FROM waitlist WHERE book_id = ? AND user_id = ?")
+    .run(entry.bookId, entry.userId);
+  return Number(changes) > 0;
 }

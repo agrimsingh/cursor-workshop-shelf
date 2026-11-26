@@ -77,6 +77,8 @@ export function App() {
         meId={meId}
         onBorrow={(id) => runMutation(`mutation ($bookId: ID!) { borrowBook(bookId: $bookId) { id } }`, id)}
         onReturn={(id) => runMutation(`mutation ($bookId: ID!) { returnBook(bookId: $bookId) { id } }`, id)}
+        onJoin={(id) => runMutation(`mutation ($bookId: ID!) { joinWaitlist(bookId: $bookId) { position } }`, id)}
+        onLeave={(id) => runMutation(`mutation ($bookId: ID!) { leaveWaitlist(bookId: $bookId) }`, id)}
       />
     </div>
   );
