@@ -26,6 +26,23 @@ CREATE TABLE IF NOT EXISTS loans (
 
 CREATE UNIQUE INDEX IF NOT EXISTS one_active_loan_per_book
   ON loans(book_id) WHERE returned_at IS NULL;
+
+CREATE TABLE IF NOT EXISTS waitlist (
+  id        INTEGER PRIMARY KEY,
+  book_id   INTEGER NOT NULL REFERENCES books(id),
+  user_id   TEXT    NOT NULL REFERENCES users(id),
+  joined_at TEXT    NOT NULL,
+  UNIQUE (book_id, user_id)
+);
+
+CREATE TABLE IF NOT EXISTS notifications (
+  id         INTEGER PRIMARY KEY,
+  user_id    TEXT    NOT NULL REFERENCES users(id),
+  book_id    INTEGER NOT NULL REFERENCES books(id),
+  message    TEXT    NOT NULL,
+  created_at TEXT    NOT NULL,
+  read_at    TEXT
+);
 `;
 
 export function migrate(db: DatabaseSync): void {

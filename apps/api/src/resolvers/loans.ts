@@ -1,6 +1,7 @@
 import { activeLoanForBook, getBook, getUser, insertLoan, markReturned, type LoanRow } from "@shelf/db";
 import { AppError, LOAN_DAYS, addDays } from "@shelf/shared";
 import { requireUser, type Context } from "../context";
+import { notifyNextInLine } from "../notify";
 
 export const loansResolvers = {
   Mutation: {
@@ -20,7 +21,9 @@ export const loansResolvers = {
       if (!loan) throw new AppError("CONFLICT", "That book is not on loan.");
       if (loan.userId !== userId) throw new AppError("FORBIDDEN", "Only the borrower can return this book.");
 
-      return markReturned(ctx.db, loan.id, ctx.now());
+      const returned = markReturned(ctx.db, loan.id, ctx.now());
+      notifyNextInLine(ctx, loan.bookId);
+      return returned;
     },
   },
   Loan: {

@@ -2,6 +2,7 @@ import type { User } from "@shelf/shared";
 import { useCallback, useEffect, useState } from "react";
 import { BOOK_FIELDS, getCurrentUserId, gql, setCurrentUserId } from "./api";
 import { BookGrid } from "./components/BookGrid";
+import { NotificationBell } from "./components/NotificationBell";
 import { SearchBar } from "./components/SearchBar";
 import { UserPicker } from "./components/UserPicker";
 import type { BookView } from "./types";
@@ -61,6 +62,7 @@ export function App() {
       <header className="header">
         <h1>Shelf</h1>
         <p className="tagline">The team lending library</p>
+        <NotificationBell meId={meId} />
         <UserPicker users={users} meId={meId} onChange={chooseUser} />
       </header>
 

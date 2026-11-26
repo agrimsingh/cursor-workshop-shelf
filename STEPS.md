@@ -1,47 +1,49 @@
-# Starter: plan, build, review, rewind
+# Power: one feature, three agents in parallel
 
-**Branch:** `main` · **Time:** 20–30 minutes · **Answer key:** `starter-done`
+**Branch:** `parallel` · **Time:** 30–45 minutes · **Answer key:** `parallel-done`
 
-You'll add one feature that touches every layer of the app: the database, the GraphQL API, and the React UI.
+You'll split one feature across three agents that run at the same time, merge their work, and have a reviewer subagent check it before you do.
 
 ## The task
 
-Books wear out. Add a **condition** to every book (new, good, or worn), show it on each book card, and let people filter the list by condition.
+Add a **waitlist**. When a book is on loan, people can join a queue. When it comes back, the next person in line gets a notification.
+
+The plan is already written in `PARALLEL.md`, with the shared contract (schema, DB signatures, front-end types) in the code. Read it first. The contract is what lets three agents work at once without stepping on each other.
 
 ## Steps
 
-1. **Plan first.** Open a new agent and switch to **Plan mode** (Shift+Tab). Paste:
+1. **Read the plan.** Open `PARALLEL.md`. Note which files each part owns.
 
-   > Add a condition to every book: new, good, or worn. Seed a mix of conditions. Show the condition on each book card, and add a filter next to the search box. Look at how search works today and follow the same path through the db package, the GraphQL API, and the web app.
+2. **See it fail.** `npm run check:parallel` fails across Parts A, B, and C. That's your finish line.
 
-2. **Edit the plan.** Read it before you build. Change at least one step. For example, ask for the filter to be a dropdown, or for worn books to get a warning colour.
+3. **Launch in parallel.** In a new agent, paste:
 
-3. **Build.** Click **Build** (or switch to Agent mode). Watch which files it reads and edits.
+   > /multitask Build the waitlist in @PARALLEL.md. Run Part A, Part B, and Part C as separate subagents, each in its own worktree. Each part edits only the files it owns and must not change the contract. When all three finish, merge them into this branch, run `npm run check:parallel` and `npm run check`, and fix anything that fails.
 
-4. **Review the diff.** Open the changes. Reject one hunk you don't like and ask the agent to redo it your way.
+   Watch the coordinator split the work. Open each subagent to see what it's doing.
 
-5. **Rewind once.** Send a follow-up you don't want (for example, "also rename Book to Volume everywhere"). Then restore the checkpoint from before that message.
+   **No /multitask?** Open three agents yourself, set each to run in a worktree, and give each one: "Build Part A from @PARALLEL.md. Only edit the files Part A owns." (then B, then C). Apply each result when it finishes.
 
-6. **Check your work.**
+4. **Review in tiers.** When the checks pass, paste:
 
-   ```bash
-   npm run check:starter   # the acceptance check for this task
-   npm run check           # type check and the existing tests
-   ```
+   > Use the reviewer subagent to review this branch against @PARALLEL.md.
 
-   Tip: tell the agent "make `npm run check:starter` pass". It can run the check and fix what fails.
+   The reviewer is defined in `.cursor/agents/reviewer.md`. Read it: it's a role your whole team gets because it lives in the repo.
 
-7. **See it.** `npm run dev`, then open http://localhost:5173.
+5. **You judge.** Read what the reviewer flagged. Decide what to fix and what ships.
+
+6. **See it.** `npm run db:reset && npm run dev`. Sign in as Ada, join the waitlist for a book Grace has. Switch to Grace and return it. Switch back to Ada and check the bell.
 
 ## Stretch
 
-- Only the borrower should see a "Report damage" button that moves a book from good to worn.
-- Ask the agent to write the tests for your stretch change first, then make them pass.
+- **Best of n:** run Part B twice on two different models and keep the better UI.
+- **Make it your own reviewer:** edit `.cursor/agents/reviewer.md` with a check your team cares about, then run it again.
+- **Hold the book:** after a return, reserve the book for the notified person for 48 hours. Write the contract change into `PARALLEL.md` first.
 
 ## Stuck?
 
 ```bash
-git stash            # park your work
-git checkout starter-done
-npm run db:reset     # re-seed so every book gets a condition
+git stash
+git checkout parallel-done
+npm run db:reset
 ```

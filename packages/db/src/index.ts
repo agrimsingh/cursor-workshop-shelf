@@ -20,4 +20,6 @@ export function openDb(path = ":memory:"): Db {
 
 export * from "./books";
 export * from "./loans";
+export * from "./notifications";
 export * from "./users";
+export * from "./waitlist";

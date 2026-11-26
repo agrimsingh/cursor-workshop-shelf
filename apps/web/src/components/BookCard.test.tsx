@@ -18,6 +18,8 @@ const book: BookView = {
     returnedAt: null,
     overdue: true,
   },
+  waitlist: [],
+  myWaitlistPosition: null,
 };
 
 const noop = () => {};
