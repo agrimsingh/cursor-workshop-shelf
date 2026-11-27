@@ -1,0 +1,46 @@
+---
+description: SQLite schema, migrations, and data-layer conventions for packages/db. Use when adding tables, columns, indexes, or queries, or when a resolver needs new data access.
+globs: packages/db/**
+alwaysApply: false
+---
+
+# Database conventions (packages/db)
+
+Shelf uses SQLite through `node:sqlite` (`DatabaseSync`). The API opens `data/shelf.db` (gitignored); tests use `openDb(":memory:")`.
+
+## Where SQL lives
+
+- All SQL lives in `packages/db/src`, one file per table (`books.ts`, `loans.ts`, `users.ts`, ...). Re-export new files from `src/index.ts`.
+- Resolvers in `apps/api` never call `prepare` or `exec`. They call a helper from `@shelf/db` with `ctx.db`; add the helper if it's missing.
+- Helpers take `db: DatabaseSync` as the first argument and return typed camelCase rows. Alias snake_case columns in a shared `COLUMNS` string (`cover_color AS coverColor`).
+- Always bind values with `?` placeholders. Never interpolate user input into SQL.
+- Writes return the fresh row (insert, then `getX(db, id)`), as `insertLoan` and `markReturned` do.
+- Timestamps are ISO-8601 `TEXT` and come from `ctx.now()` in the resolver, never `new Date()` in the data layer.
+
+## Schema changes
+
+- The schema lives in `src/migrate.ts`. `openDb` runs `migrate` then `seed` on every start, against whatever `data/shelf.db` already exists.
+- New tables and indexes go in `SCHEMA` with `CREATE TABLE IF NOT EXISTS` / `CREATE INDEX IF NOT EXISTS`.
+- `CREATE TABLE IF NOT EXISTS` skips tables that already exist, so editing a table's definition in `SCHEMA` does nothing to an existing local DB. To add a column to an existing table (for example `offered_at` and `hold_expires_at` on `waitlist`), leave the `CREATE TABLE` as it was and add a call in `migrate` after `db.exec(SCHEMA)`:
+  `addColumnIfMissing(db, "waitlist", "hold_expires_at", "TEXT");`
+- A column added this way must be nullable or have a `DEFAULT`, because existing rows get it too.
+- Renaming or dropping columns, or changing their types, is not supported by `migrate`. Ask before doing it.
+- `npm run db:reset` is still needed when:
+  - you change `seed.ts`, because `seed` only runs when `books` is empty;
+  - you add a unique index that existing local data violates (the index creation fails on start).
+  Tell the user to run it in your summary when either applies.
+- Tests always build a fresh DB, so they don't prove migration of an existing DB works. Add a test like `migrate.test.ts` when a migration step has real logic.
+
+## Invariants belong in the database
+
+- Enforce "only one of X" rules with a constraint, not only an app-code check. Examples: `one_active_loan_per_book` (partial unique index on `loans(book_id) WHERE returned_at IS NULL`) and `one_hold_per_book` on the waitlist.
+- Keep the friendly app-code check too, so resolvers can throw `AppError("CONFLICT", ...)` with a clear message. The index is the backstop for races and bugs.
+- Use `NOT NULL`, `REFERENCES`, and `UNIQUE` where they apply. Foreign keys are on (`PRAGMA foreign_keys = ON` in `openDb`).
+- Wrap multi-statement writes in `BEGIN` / `COMMIT`.
+
+## Tests
+
+- API tests use `testApi()` from `apps/api/src/testing.ts`, which gives a fresh seeded in-memory DB and a pinned clock (`TEST_NOW`). Don't share DB state between tests.
+- When you add a constraint, add a test that the violating case fails, through the API (expect the `AppError` code) or directly against `db`.
+- Seed data is fixture data: tests rely on it (book 2 is on loan, book 5 is overdue). Don't change existing seed rows without updating tests.
+- Run `npm run check` before you say you're done.
