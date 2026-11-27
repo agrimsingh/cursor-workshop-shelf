@@ -17,7 +17,7 @@ const book: BookView = {
     dueAt: "2026-11-15T09:00:00.000Z",
     returnedAt: null,
     overdue: true,
-    lateFeeCents: 600,
+    lateFeeCents: 550,
   },
 };
 
@@ -26,7 +26,7 @@ const noop = () => {};
 describe("BookCard", () => {
   it("shows who has an overdue book and when it was due", () => {
     const html = renderToStaticMarkup(<BookCard book={book} meId="ada" onBorrow={noop} onReturn={noop} />);
-    expect(html).toContain("Overdue · Linus Torvalds · due 15 Nov 2026 · $6.00 late fee");
+    expect(html).toContain("Overdue · Linus Torvalds · due 15 Nov 2026 · $5.50 late fee");
     expect(html).not.toContain("Return");
   });
 
