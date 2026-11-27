@@ -37,4 +37,10 @@ describe("loans", () => {
     const { data } = await api.query(`{ book(id: "5") { currentLoan { overdue } } }`);
     expect(data?.book.currentLoan.overdue).toBe(true);
   });
+
+  it("charges the overdue loan for full days only", async () => {
+    const api = testApi();
+    const { data } = await api.query(`{ book(id: "5") { currentLoan { lateFeeCents } } }`);
+    expect(data?.book.currentLoan.lateFeeCents).toBe(550);
+  });
 });
